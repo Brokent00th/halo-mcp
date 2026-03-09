@@ -54,6 +54,16 @@ function sleep(ms: number): Promise<void> {
   });
 }
 
+function randomSuffix(length: number): string {
+  let output = "";
+
+  while (output.length < length) {
+    output += Math.random().toString(36).slice(2);
+  }
+
+  return output.slice(0, length);
+}
+
 export class HaloClient {
   private readonly baseUrl: string;
   private readonly apiKey: string;
@@ -110,7 +120,7 @@ export class HaloClient {
     metadata?: Record<string, unknown>
   ): Promise<JsonRecord> {
     const amount = Math.round(amountUsdc * 1_000_000).toString();
-    const idempotencyKey = `mcp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const idempotencyKey = `mcp-${Date.now()}-${randomSuffix(6)}`;
 
     return this.request<JsonRecord>("/api/v1/intents", {
       method: "POST",
