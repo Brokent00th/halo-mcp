@@ -1,94 +1,53 @@
-# @halo/mcp-server
+# HALO MCP Server
 
-Give your AI agent the ability to make payments.
+Connect any MCP-compatible AI tool to HALO's Agentic Banking OS.
 
-`@halo/mcp-server` is an MCP (Model Context Protocol) server that exposes HALO payment tools to any MCP-compatible AI agent. Once configured, the agent can discover tools automatically and use them to create payment intents, inspect balances, review mandates, check payment status, inspect recent transactions, and trigger the HALO kill switch.
+## Compatible With
+- Claude Desktop
+- Claude Code
+- Cursor
+- Antigravity
+- Any MCP client
 
-## Quick Start
+## Install
 
 ### Claude Desktop
-
-Update `~/.claude/claude_desktop_config.json`:
+Add to `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
-    "halo-payments": {
+    "halo": {
       "command": "npx",
-      "args": ["@halo/mcp-server"],
-      "env": {
-        "HALO_API_KEY": "your_halo_api_key"
-      }
+      "args": ["-y", "github:Brokent00th/halo-mcp"],
+      "env": { "HALO_API_KEY": "halo_sk_test_your_key" }
     }
   }
 }
 ```
 
-### Claude Code
+### Claude Code / Cursor
+Add to MCP settings:
+- Server: `github:Brokent00th/halo-mcp`
+- Env: `HALO_API_KEY=halo_sk_test_your_key`
 
-Update `~/.claude/settings.json`:
-
-```json
-{
-  "mcpServers": {
-    "halo-payments": {
-      "command": "npx",
-      "args": ["@halo/mcp-server"],
-      "env": {
-        "HALO_API_KEY": "your_halo_api_key"
-      }
-    }
-  }
-}
-```
-
-## Usage Example
-
-Example flow:
-
-1. User: "Pay 5 USDC to `0xabc...` for API credits."
-2. Agent calls `halo_create_payment`.
-3. HALO evaluates mandates and FIRE fraud scoring.
-4. If the payment is above an approval threshold, HALO returns `pending_approval`.
-5. User approves the payment in the Nexus mobile app.
-6. Agent calls `halo_get_intent_status` until the payment is settled.
-
-## Tools
-
+## Available Tools
 | Tool | Description |
-| --- | --- |
-| `halo_create_payment` | Create a HALO payment intent with mandate and fraud controls applied. |
-| `halo_check_balance` | Check wallet balance, available funds, and locked funds. |
-| `halo_list_mandates` | List the spending rules governing payments. |
-| `halo_get_intent_status` | Inspect the status and settlement details of a payment intent. |
-| `halo_recent_transactions` | View recent payment transactions and settlement hashes. |
-| `halo_emergency_freeze` | Trigger the HALO emergency kill switch to freeze activity. |
+|------|-------------|
+| halo_create_payment | Send USDC to any address |
+| halo_check_balance | Check wallet balance |
+| halo_list_mandates | View spending rules |
+| halo_get_intent_status | Check payment status |
+| halo_recent_transactions | View payment history |
+| halo_emergency_freeze | Freeze all agents immediately |
 
-## Environment Variables
+## Setup
+1. Create account: https://halo-dashboard.vercel.app
+2. Create agent -> copy API key
+3. Configure MCP client with key
+4. Ask Claude: "Check my HALO balance"
 
-| Variable | Required | Default | Description |
-| --- | --- | --- | --- |
-| `HALO_API_KEY` | Yes | None | Bearer token used to authenticate every HALO API request. |
-| `HALO_BASE_URL` | No | `https://halo-backend-production-cac9.up.railway.app` | Override the HALO backend base URL. |
-
-## Architecture
-
-```text
-+--------+      +-----+      +-----------------+      +-------+      +-----------------------------------+
-| Agent  | ---> | MCP | ---> | HALO MCP Server | ---> | HTTPS | ---> | HALO Backend                      |
-+--------+      +-----+      +-----------------+      +-------+      | Mandates / FIRE / Approval / CDP |
-                                                                      +-----------------------------------+
-```
-
-## Development
-
-```bash
-git clone https://github.com/Brokent00th/halo-mcp.git
-cd halo-mcp
-npm install
-HALO_API_KEY=your_halo_api_key npm run dev
-```
-
-## License
-
-MIT
+## Links
+- HALO Dashboard: https://halo-dashboard.vercel.app
+- Quick Start: https://github.com/Brokent00th/halo-mvp/blob/main/docs/QUICKSTART.md
+- API Reference: https://github.com/Brokent00th/halo-mvp/blob/main/docs/API-REFERENCE.md
